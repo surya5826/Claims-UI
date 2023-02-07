@@ -1,0 +1,133 @@
+<!-- <mat-progress-bar mode="determinate" [value]="retrunProgress()" color="accent"></mat-progress-bar> -->
+<div class="spinner" *ngIf="!spinner">
+    <mat-spinner></mat-spinner>
+
+</div>
+<mat-card>
+
+    <app-data-order-table [rows]="ordersDataItems" (newItemEvent)="listItems($event)" [showActions]="true">
+    </app-data-order-table>
+    <mat-card *ngIf="ordersList.row.length > 0">
+        <mat-card-header style="background-color: #ffc235;border-radius:4px;">
+
+            <mat-card-subtitle style="
+    margin-top: 6%;
+">
+                <h1>Selected Claim Orders </h1>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <form [formGroup]="costDetails" fxFlexFill fxLayout="row" fxLayoutGap="10%">
+            <mat-form-field appearance="fill">
+                <mat-label>Amount Basis</mat-label>
+                <!-- <input matInput placeholder="Name" formControlName="amountBasis" required> -->
+                <select matNativeControl placeholder="Amount Basis" formControlName="amountBasis" required>
+                <option value="Product">Product</option>
+                <option value="Shipping">Shipping</option>
+              </select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Claimed Amount</mat-label>
+                <input matInput type="number" placeholder="cost" formControlName="cost" [disabled]="true" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Currency</mat-label>
+                <select matNativeControl placeholder="currency" formControlName="currency" required>
+                <option value="USD">USD</option>
+                <option value="EURO">EURO</option>
+              </select>
+            </mat-form-field>
+        </form>
+        <div>
+            <ngx-datatable class="material" [scrollbarH]="true" [rows]="ordersList.row" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="40" [rowHeight]="40" [limit]="10">
+                <ngx-datatable-column *ngFor="let col of filteredColumns" [name]="col.name" [prop]="col.props">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Claim QTY" [width]="90" [frozenRight]="true" style="background-color: grey;">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <input matInput placeholder="Claim QTY" [(ngModel)]="totalAmount[row.item]" type="number" value="0" />
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Category">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <select matNativeControl placeholder="currency" required>
+                            <option value="Overage">Overage</option>
+                            <option value="Underrage">Underrage</option>
+                            <!-- <option value="EURO">EURO</option> -->
+              </select>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Unit Cost">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        ${{5}}
+                        <!-- <option value="EURO">EURO</option> -->
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="UOM">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <select matNativeControl placeholder="currency" required>
+                <option value="LB">LB</option>
+                <option value="KG">KG</option>
+                <!-- <option value="EURO">EURO</option> -->
+              </select>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Total" [frozenRight]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        ${{ totalAmount[row.item] ? totalAmount[row.item] : 0 }}
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="EST.Unit Cost">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        ${{0.50}}
+                        <!-- <option value="EURO">EURO</option> -->
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="EST Total Cost" [frozenRight]="true" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        ${{ totalAmount[row.item] ? totalAmount[row.item] : 0 }}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+
+
+
+
+    </mat-card>
+    <mat-card *ngIf="ordersList.row.length > 0">
+        <mat-card-header style="background-color: #ffc235;border-radius:4px;">
+
+            <mat-card-subtitle style="
+        margin-top: 6%;
+    ">
+                <h1>Additional Information</h1>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-label>Please Provide detailed notes and attach all relevant backup documentation, This information is required for submittal.</mat-label><br/>
+        <mat-card-content>
+
+            <form [formGroup]="additionalInfo" fxFlexFill fxLayout="row" fxLayoutGap="10%">
+                <mat-form-field appearance="fill">
+                    <mat-label>Customer Notes</mat-label>
+                    <textarea matInput placeholder="Notes" formControlName="notes"></textarea>
+                </mat-form-field>
+
+
+
+            </form>
+            <span>
+                <mat-label>Documents</mat-label><br/>
+
+                <button mat-raised-button (click)="openBottomSheet()" style="left: 1.5%;">
+                    Open
+                </button>
+            </span>
+
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-stroked-button color="primary" mat-button>Cancel</button>
+            <button mat-stroked-button color="primary" mat-button (click)="submitData()">Create Claim</button>
+        </mat-card-actions>
+    </mat-card>
+
+</mat-card>

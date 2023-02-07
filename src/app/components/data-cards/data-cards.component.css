@@ -1,0 +1,28 @@
+.main-icon {
+    font-size: 50px;
+    height: 50px ;
+    width: 50px;
+}
+
+.facility{
+    color:#FF9021;
+}
+.customer{
+    color:#4BC0C0;
+}
+.claim{
+    color:#36A2EB;
+}
+.claim-amount{
+    color: #FF6484;
+}
+.paid-amount{
+    color: #FFC235;
+}
+.date {
+    width: 15%;
+}
+
+::ng-deep .cdk-overlay-pane {
+    overflow:visible
+}

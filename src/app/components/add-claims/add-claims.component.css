@@ -1,0 +1,19 @@
+.mat-form-field {
+    margin: 1.5%;
+    width: 30%;
+}
+
+.spinner {
+    position: fixed;
+    z-index: 1;
+    background-color: white;
+    padding: 29% 50% 50% 38%;
+}
+
+.mat-card-actions {
+    margin-left: 15px;
+}
+
+datatable-body-cell {
+    background-color: grey;
+}

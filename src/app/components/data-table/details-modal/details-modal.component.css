@@ -1,0 +1,82 @@
+h3 {
+    
+    color: white;
+  
+}
+
+.modal-info {
+    padding-right: 30px;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.mat-list-data {
+    padding: 10px;
+    background-color: rgb(221, 221, 244);
+    border-radius: 10px;
+}
+
+.mat-list-data:hover {
+    padding: 10px;
+    background-color: rgb(245, 245, 247);
+    border-radius: 10px;
+}
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    .1% {
+        transform: translateX(0);
+        opacity: 100;
+    }
+    100% {
+        /* transform: translateX(0); */
+        opacity: 100;
+    }
+}
+
+
+/* #opacitylevel 0; */
+
+.mat-list-data {
+    opacity: 0;
+    animation: slideInLeft 1000s;
+}
+
+.mat-list-data:nth-child(1) {
+    animation-delay: .5s;
+}
+
+.mat-list-data:nth-child(2) {
+    animation-delay: .6s;
+}
+
+.mat-list-data:nth-child(3) {
+    animation-delay: .7s;
+}
+
+.mat-list-data:nth-child(4) {
+    animation-delay: .8s;
+}
+
+.mat-list-data:nth-child(5) {
+    animation-delay: .9s;
+}
+
+.mat-list-data:nth-child(6) {
+    animation-delay: 1s;
+}
+
+.mat-list-data:nth-child(7) {
+    animation-delay: 1.1s;
+}
+
+.mat-list-data:nth-child(8) {
+    animation-delay: 1.2s;
+}
+
+.mat-list-data:nth-child(9) {
+    animation-delay: 1.3s;
+}

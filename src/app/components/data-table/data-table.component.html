@@ -1,0 +1,209 @@
+<mat-card-header class="absolute-center text-center" style="background-color: #efd087;border-radius:4px;">
+    <mat-card-subtitle style="
+    margin-top: 10%;
+">
+        <h1>Claims Details</h1>
+    </mat-card-subtitle>
+</mat-card-header>
+<br/>
+<div *ngIf="rows.length > 0 && showGrid" fxFlexFill fxLayout="column">
+    <div fxFlex fxLayoutAlign="end start" fxLayoutGap="20px">
+        <div>
+            <button mat-stroked-button color="primary" mat-button (click)="sortingfilters = !sortingfilters">
+                <mat-icon>sorting</mat-icon>
+                <span>Filters</span>
+            </button>
+        </div>
+        <div>
+            <button mat-stroked-button color="primary" mat-button [matMenuTriggerFor]="menu">
+                <mat-icon>check_box</mat-icon>Display Fields
+            </button>
+            <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
+                <li mat-menu-item *ngFor="let item of columns" class="li-column-list" (click)="$event.stopPropagation()">
+                    <mat-checkbox [checked]="item.show" (change)="togglecolumnCheckbox(item)" color="primary">
+                        {{item.name}} </mat-checkbox>
+                </li>
+            </mat-menu>
+        </div>
+        <div>
+            <button mat-stroked-button color="primary" mat-button (click)="onExportToExcel()">
+                <mat-icon>upload_file</mat-icon>
+                <span>Export to Excel</span>
+            </button>
+        </div>
+    </div>
+    <br />
+    <mat-card *ngIf="sortingfilters && tableType == 'claim'">
+        <span *ngFor="let item of filteredColumns">
+            <span *ngIf="item.show && item.name == 'Category'">
+                <mat-form-field appearance="outline" color="primary">
+                    <select matNativeControl placeholder="Claim Category" (change)="filteredApplied($event,item.props)" [formControl]="resetValue">
+                        <option value="Damage">Damage</option>
+                        <option value="Shortage">Shortage</option>
+                        <option value="Detention">Detention</option>
+                        <option value="Freight">Freight</option>
+                        <option value="Demurrage – EUF">Demurrage – EUF</option>
+                        <option value="Freight Cost">Freight Cost</option>
+                        <option value="Inventory Adjustment">Inventory Adjustment
+                        </option>
+                    </select>
+                    <mat-label>Category</mat-label>
+                </mat-form-field>
+                &nbsp;
+
+            </span>
+
+        <span *ngIf="item.show && item.name == 'Claim Type'">
+                <mat-form-field appearance="outline">
+                    <select matNativeControl placeholder="Claim Type" (change)="filteredApplied($event,item.props)" [formControl]="resetValue">
+                        <option value="WAREHOUSE">Warehouse</option>
+                        <option value="TRANSPORTATION">Transportation</option>
+                    </select>
+                    <mat-label>Claim Type</mat-label>
+                </mat-form-field>
+                &nbsp;
+
+            </span>
+        <span *ngIf="item.name != 'Category' && item.name != 'Claim Type' && item.name != 'Date' && item.name != 'Date Closed'">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{item.name}}</mat-label>
+                    <input matInput type={{item.type}} placeholder={{item.name}}
+                        (keyup)="filteredApplied($event,item.props)" [formControl]="resetValue"/>
+                </mat-form-field>
+                &nbsp;
+            </span>
+
+
+        </span>
+    </mat-card>
+
+    <mat-card *ngIf="sortingfilters && tableType == 'order'">
+        <form [formGroup]="filteredObject">
+            <mat-form-field appearance="outline">
+                <mat-label>Date Created Range</mat-label>
+                <mat-date-range-input [formGroup]="campaignTwo" [rangePicker]="campaignTwoPicker" [comparisonStart]="campaignOne.value.start" [comparisonEnd]="campaignOne.value.end">
+                    <input matStartDate placeholder="Start date" formControlName="start">
+                    <input matEndDate placeholder="End date" formControlName="end">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="campaignTwoPicker"></mat-datepicker-toggle>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-date-range-picker #campaignTwoPicker></mat-date-range-picker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Facility</mat-label>
+                <input type="text" placeholder="Pick one" formControlName="facility" aria-label="Number" matInput [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of facilityList" [value]="option.facilityName">
+                        {{option.facilityName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Customer</mat-label>
+                <input type="text" placeholder="Pick one" formControlName="customer" aria-label="Number" matInput [matAutocomplete]="auto1">
+                <mat-autocomplete #auto1="matAutocomplete">
+                    <mat-option *ngFor="let option of customerList" [value]="option.name">
+                        {{option.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Customer Reference Number</mat-label>
+                <input type="text" placeholder="Pick one" formControlName="customer" aria-label="Number" matInput [matAutocomplete]="auto2">
+                <mat-autocomplete #auto2="matAutocomplete">
+                    <mat-option *ngFor="let option of customerList" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>AMC Reference Number</mat-label>
+                <input type="text" placeholder="Pick one" formControlName="customer" aria-label="Number" matInput [matAutocomplete]="auto3">
+                <mat-autocomplete #auto3="matAutocomplete">
+                    <mat-option *ngFor="let option of customerList" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <br/>
+
+        </form>
+
+        <!-- <span *ngFor="let item of filteredColumns">
+
+        <span>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{item.name}}</mat-label>
+                    <input matInput type={{item.type}} placeholder={{item.name}}
+                        (keyup)="filteredApplied($event,item.props)" />
+                </mat-form-field>
+                &nbsp;
+            </span>
+
+
+        </span> -->
+    </mat-card>
+
+    <mat-card *ngIf="sortingfilters">
+        <span *ngFor="let item of filteredColumns">
+
+            <mat-form-field appearance="outline" *ngIf="item.show && item.name == 'Date'">
+                <mat-label>Created Date Range</mat-label>
+                <mat-date-range-input
+                            [formGroup]="campaignOne"
+                            [rangePicker]="campaignOnePicker"
+                                [comparisonStart]="campaignTwo.value.start"
+                                [comparisonEnd]="campaignTwo.value.end">
+                                <input matStartDate placeholder="Start date" formControlName="start" [formControl]="resetValue">
+                            <input matEndDate placeholder="End date" formControlName="end" [formControl]="resetValue">
+                        </mat-date-range-input>
+                            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+            </mat-form-field>
+            <span *ngIf="item.show && item.name == 'Date'">&nbsp;</span>
+        <mat-form-field appearance="outline" *ngIf="item.show && item.name == 'Date Closed'">
+            <mat-label>Date Closed Range</mat-label>
+            <mat-date-range-input [formGroup]="campaignTwo" [rangePicker]="campaignTwoPicker" [comparisonStart]="campaignOne.value.start" [comparisonEnd]="campaignOne.value.end">
+                <input matStartDate placeholder="Start date" formControlName="start" [formControl]="resetValue">
+                <input matEndDate placeholder="End date" formControlName="end" [formControl]="resetValue">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="campaignTwoPicker"></mat-datepicker-toggle>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-date-range-picker #campaignTwoPicker></mat-date-range-picker>
+        </mat-form-field>
+        </span>
+
+        <button mat-raised-button color="primary" class="float-end reset" (click)="resetFilterApplied()"> RESET </button>
+    </mat-card>
+    <br />
+    <div id="print-section">
+        <ngx-datatable class="material" [scrollbarH]="true" [rows]="filteredRows" [columns]="filteredColumns" [selectionType]="SelectionType.checkbox" id="claims-table" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="40" [rowHeight]="rowHeight"
+            [limit]="10">
+            <ngx-datatable-column *ngFor="let col of filteredColumns" [name]="col.name" [prop]="col.props">
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngIf="showActions" [frozenRight]="true" name="Actions" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="true">
+                <ng-template let-row="row"  let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                        <mat-icon color="primary">checklist</mat-icon> Actions
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="openDialog(row)" *ngIf="tableType == 'claim'">
+                            <mat-icon>feed</mat-icon>
+                            <span>More Information</span>
+                        </button>
+                        <button mat-menu-item (click)="editItem(row, rowIndex)" *ngIf="tableType == 'claim'">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit Information</span>
+                        </button>
+                        <button mat-menu-item (click)="editItem(row, rowIndex)" *ngIf="tableType == 'order'">
+                            <mat-icon>add</mat-icon>
+                            <span>Add to Claim</span>
+                        </button>
+                    </mat-menu>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+</div>

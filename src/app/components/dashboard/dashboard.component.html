@@ -1,0 +1,66 @@
+<app-header [dashboard]="drawer"></app-header>
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+
+        <mat-list>
+            <mat-list-item class="headerOption" (click)="navOptions = 'home'">
+                <mat-icon>home</mat-icon> &nbsp; Claims Home
+            </mat-list-item>
+            <mat-list-item class="headerOption" (click)="navOptions = 'addClaim'">
+                <mat-icon>add</mat-icon> &nbsp; Add Claims
+            </mat-list-item>
+        </mat-list>
+    </mat-drawer>
+
+    <div class="example-sidenav-content" *ngIf="navOptions == 'home'" #dashboard>
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-form-field appearance="outline">
+                <mat-select matNativeControl required placeholder="Year" (selectionChange)="yearrange($event)">
+                    <mat-option>None</mat-option>
+                    <mat-option value="2022" selected>2022</mat-option>
+                    <mat-option value="2021">2021</mat-option>
+                    <mat-option value="2020">2020</mat-option>
+                    <mat-option value="2019">2019</mat-option>
+                    <mat-option value="2018">2018</mat-option>
+                </mat-select>
+                <mat-label>Claim details for Year</mat-label>
+            </mat-form-field>
+        </div>
+
+        <div fxFlexFill fxLayout="column" fxLayoutGap="20px" fxFlexFill class="dashboard" *ngIf="show">
+            <div>
+                <app-data-cards [rowData]="claims" (year)="getYear($event)" (facilityChange)="facilityChange($event)" [notify]="notifyObj"></app-data-cards>
+            </div>
+            <div fxFlexFill fxLayoutGap="20px" fxLayout="row">
+                <mat-card fxFlex="50%">
+                    <app-doughnut-chart [claimData]="statusData" [facilityId]="facilityId"></app-doughnut-chart>
+                </mat-card>
+                <mat-card fxFlex="50%" fxFlexFill fxLayout="column">
+                    <div fxFlex fxLayoutAlign="end start">
+                        <div class="pt-1"> Open Claims &nbsp;</div>
+                        <mat-slide-toggle #slider color="primary">Closed Claims</mat-slide-toggle>
+                    </div>
+                    <mat-card-header>
+                        <mat-card-subtitle *ngIf="!slider.checked">Top 5 Open Claims Claimed Amount</mat-card-subtitle>
+                        <mat-card-subtitle *ngIf="slider.checked">Top 5 Closed Claims Claimed Amount</mat-card-subtitle>
+
+                    </mat-card-header>
+                    <app-bar-chart *ngIf="!slider.checked" [claimData]="openClaims" [facilityId]="facilityId" [barchartColor]="openBarChartColor" [barSize]="openSize">
+                    </app-bar-chart>
+
+                    <app-bar-chart *ngIf="slider.checked" [claimData]="closedClaims" [facilityId]="facilityId" [barchartColor]="closedBarChartColor" [barSize]="closedSize"></app-bar-chart>
+
+                </mat-card>
+            </div>
+            <div fxFlexFill fxLayoutGap="100%">
+                <mat-card>
+                    <app-data-table [rows]="claims" (newItemEvent)="selectedData($event)" [facilityId]="facilityId" [showActions]="true"></app-data-table>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="example-sidenav-content" *ngIf="navOptions == 'addClaim'">
+        <app-add-claims [selectedDataItems]="selectedDataItems"></app-add-claims>
+
+    </div>
+</mat-drawer-container>
