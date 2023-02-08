@@ -11,7 +11,7 @@ stage("Docker build"){
 sh 'docker images'
 stage("Deploy"){
  sh 'docker rm -f claims-ui||true'
-sh ' docker run -d -p 8080:80 --name claims-ui claims-ui:latest'
+sh ' docker run -d -p 8899:80 --name claims-ui claims-ui:latest'
 }
 }
 }
