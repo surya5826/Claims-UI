@@ -3,9 +3,9 @@ stage("Git Clone"){
 
 git branch: 'main', url: 'https://github.com/surya5826/Claims-UI.git'
 }
-  stage("mvn clean"){
-  sh 'mvn clean package'
-  }
+//   stage("mvn clean"){
+//   sh 'mvn clean package'
+//   }
 stage("Docker build"){  
  sh 'docker build -t claims-ui:latest .'
 sh 'docker images'
