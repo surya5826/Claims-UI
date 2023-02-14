@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-   CLAIMS_URL:'http://34.225.215.73:9000',
-   FACILITY_URL:'http://34.225.215.73:9001',
-   CUSTOMER_URL:'http://34.225.215.73:9002'
+   CLAIMS_URL:'http://3.227.15.38:9000',
+   FACILITY_URL:'http://3.227.15.38:9001',
+   CUSTOMER_URL:'http://3.227.15.38:9002'
 };
